@@ -1,0 +1,11 @@
+---
+- name: 5.3.4 Ensure password hashing algorithm is SHA-512 (Scored) 
+  lineinfile:
+    state: present
+    path: /etc/pam.d/{{ item }}
+    backrefs: yes
+    regexp: '^(password[\s]*sufficient[\s]*pam_unix\.so)(?!.*sha512)(.*)'
+    line: '\1 sha512\2'
+  with_items:
+    - password-auth
+    - system-auth

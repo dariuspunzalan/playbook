@@ -1,0 +1,12 @@
+---
+- name: "3.2.7 Ensure Reverse Path Filtering is enabled"
+  sysctl:
+    name: "{{ item }}"
+    sysctl_set: yes
+    state: present
+    value: "1"
+    ignoreerrors: yes
+  with_items:
+    - net.ipv4.conf.all.rp_filter
+    - net.ipv4.conf.default.rp_filter
+  notify: net ipv4 route flush

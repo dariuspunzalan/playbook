@@ -1,0 +1,23 @@
+---
+- name: 4.1.2 - Ensure auditd is installed
+  yum:
+    name: audit
+    state: present
+
+- name: Add auditd cron to manage auditd logs
+  copy:
+    src: etc/audit/auditd.cron
+    dest: /etc/cron.daily/auditd.cron
+    mode: 0744
+
+- name: Push audit logs to remote syslog
+  template:
+    src: 4.1.2_auditd_syslog.conf.j2
+    dest: /etc/rsyslog.d/auditd_syslog.conf
+  notify: rsyslog restart
+
+- name: 4.1.2 - Ensure auditd is running
+  service:
+    name: auditd
+    enabled: yes
+    state: started

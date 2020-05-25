@@ -1,0 +1,40 @@
+---
+#5.2.15 ASX Puppet uses /etc/issue rather than default /etc/issue.net
+#This sets both /etc/issue and /etc/issue.net
+#The default permission is 0644 but ASX Puppet sets to 0600 for /etc/issue
+#It sets back to /etc/issue.net which will be used when exists
+- name: set /etc/issue
+  copy:
+    src: etc/issue
+    dest: /etc/issue
+
+- name: set /etc/motd
+  copy:
+    src: etc/issue
+    dest: /etc/motd
+
+- name: set /etc/issue.net
+  copy:
+    src: etc/issue
+    dest: /etc/issue.net
+
+- name: set /etc/issue permission
+  file:
+    path: /etc/issue
+    owner: root
+    group: root
+    mode: 0644
+
+- name: set /etc/issue.net permission
+  file:
+    path: /etc/issue.net
+    owner: root
+    group: root
+    mode: 0644
+
+- name: 5.2.15 Set SSH Banner (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^Banner "
+    line: "Banner /etc/issue.net"
+  notify: sshd reload

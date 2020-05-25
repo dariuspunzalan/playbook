@@ -1,0 +1,26 @@
+---
+- name: 5.1.8 -  Remove cron.deny
+  file:
+    path: /etc/cron.deny
+    state: absent
+
+- name: 5.1.8 -  Remove at.deny
+  file:
+    path: /etc/at.deny
+    state: absent
+
+- name: 5.1.8 - Touch cron.allow
+  file:
+    path: /etc/cron.allow
+    state: touch
+    owner: root
+    group: root
+    mode: 0600
+
+- name: 5.1.8 - Touch at.allow
+  file:
+    path: /etc/at.allow
+    state: touch
+    owner: root
+    group: root
+    mode: 0600

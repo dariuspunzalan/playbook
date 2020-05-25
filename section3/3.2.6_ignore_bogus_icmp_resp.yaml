@@ -1,0 +1,11 @@
+---
+- name: "3.2.6 Ignore Bogus ICMP responses"
+  sysctl:
+    name: "{{ item }}"
+    sysctl_set: yes
+    state: present
+    value: "1"
+    ignoreerrors: yes
+  with_items:
+    - net.ipv4.icmp_ignore_bogus_error_responses
+  notify: net ipv4 route flush

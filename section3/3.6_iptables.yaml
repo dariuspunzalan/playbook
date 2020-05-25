@@ -1,0 +1,23 @@
+---
+- name: 3.6.1 Ensure iptables is installed
+  yum:
+    name: iptables
+    state: present
+
+- name: 3.6.2-4 Ensure default firewall policies
+  set_fact:
+    iptables_default_deny: true
+    iptables_loopback: true
+    iptables_est_inbound: true
+    iptables_estnew_outbound: true
+    iptables_logging: true
+
+- name: 3.6.5 IPtables rules
+  template:
+    dest: /etc/sysconfig/iptables
+    src: 3.6.5_iptables_rules.j2
+    mode: 0600
+    owner: root
+    group: root
+  when: iptables_rules is defined
+  notify: iptables reload

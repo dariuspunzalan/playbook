@@ -1,0 +1,11 @@
+---
+- name: 5.1.1 - Ensure cronie is installed
+  yum:
+    name: cronie
+    state: present
+
+- name: 5.1.2 - Ensure crond is running
+  service:
+    name: crond
+    enabled: yes
+    state: started

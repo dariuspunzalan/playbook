@@ -1,0 +1,8 @@
+---
+- name: 3.3.3 Ensure IPv6 is disabled (Not Scored)
+  lineinfile:
+    path: '/etc/modprobe.d/CIS.conf'
+    regexp: '^[\s]*options[\s]ipv6[\s]*disable[\s]*=[\s]*1'
+    line: options ipv6 disable=1
+    create: yes
+    mode: '0644'

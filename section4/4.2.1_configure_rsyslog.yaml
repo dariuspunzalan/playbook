@@ -1,0 +1,41 @@
+---
+- name: 4.2.1.1 Install the rsyslog package (Scored)
+  yum:
+    name: rsyslog
+    state: present
+
+- name: 4.2.1.1 Activate the rsyslog Service (Scored)
+  service:
+    name: rsyslog
+    enabled: yes
+    state: started
+
+- name: 4.2.1.2 Ensure logging is configured
+  file:
+    path: /var/log/{{ item }}
+    owner: root
+    group: root
+    mode: 0600
+  with_items:
+    - messages
+    - secure
+    - cron
+    - maillog
+    - yum.log
+
+- name: 4.2.1.3 - Ensure rsyslog default file permissions configured (Scored)
+  lineinfile:
+    state: present
+    dest: /etc/rsyslog.conf
+    line: "$FileCreateMode 0640 "
+    regex: '^\$FileCreateMode '
+  notify: rsyslog restart
+
+- name: 4.2.1.4 Configure rsyslog to Send Logs to a Remote Log Host (Scored)
+  lineinfile:
+    state: present
+    dest: /etc/rsyslog.conf
+    regexp: '^\*\.\*'
+    line: "*.* @@{{ rsyslog_dest }}"
+  notify: rsyslog restart
+  when: rsyslog_dest is defined

@@ -1,0 +1,13 @@
+---
+# variables available for fine tuning:
+# pam_pwhistory
+- name: 5.3.3 Ensure password reuse is limited (Scored)
+  lineinfile:
+    path: '/etc/pam.d/{{ item }}'
+    regexp: '^(password[\s]*sufficient[\s]*pam_unix\.so)((.*(?=\s+remember\=[\d]*))?|)(?:\s+remember\=[\d]*)?(.*)$'
+    line: '\1\2\4 remember={{ pam_pwhistory|default("5", true) }}'
+    backrefs: yes
+    firstmatch: yes
+  loop:
+    - system-auth
+    - password-auth

@@ -1,0 +1,130 @@
+---
+- name: 5.2.1 - Ensure permissions on /etc/ssh/sshd_config are configured (Scored) 
+  file:
+    path: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0600
+
+- name: 5.2.2 - Set SSH Protocol to 2 (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^Protocol " 
+    line: "Protocol 2"
+  notify: sshd reload
+
+- name: 5.2.3 Set LogLevel to INFO (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^LogLevel "
+    line: "LogLevel INFO"
+  notify: sshd reload
+
+- name: 5.2.4 Disable SSH X11 Forwarding (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^X11Forwarding "
+    line: "X11Forwarding no"
+  notify: sshd reload
+
+- name: 5.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^MaxAuthTries "
+    line: "MaxAuthTries 4"
+  notify: sshd reload
+
+- name: 5.2.6 Set SSH IgnoreRhosts to Yes (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^IgnoreRhosts "
+    line: "IgnoreRhosts yes"
+  notify: sshd reload
+
+- name: 5.2.7 Set SSH HostbasedAuthentication to No (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^HostbasedAuthentication "
+    line: "HostbasedAuthentication no"
+  notify: sshd reload
+
+- name: 5.2.8 Disable SSH Root Login (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin "
+    line: "PermitRootLogin no"
+  notify: sshd reload
+
+- name: 5.2.9 Set SSH PermitEmptyPasswords to No (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitEmptyPasswords "
+    line: "PermitEmptyPasswords no"
+  notify: sshd reload
+
+- name: 5.2.10 Do Not Allow Users to Set Environment Options (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitUserEnvironment "
+    line: "PermitUserEnvironment no"
+  notify: sshd reload
+
+- name: 5.2.11 Ensure only approved MAC algorithms are used (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^MACs "
+    line: "MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
+  notify: sshd reload
+
+- name: 5.2.12 Set Idle Timeout Interval for User Login (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^ClientAliveInterval "
+    line: "ClientAliveInterval 300"
+  notify: sshd reload
+
+- name: 5.2.12 Set Idle Timeout Interval for User Login (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^ClientAliveCountMax "
+    line: "ClientAliveCountMax 0"
+  notify: sshd reload
+
+- name: 5.2.13 Ensure SSH LoginGraceTime is set to one minute or less (Scored) 
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^LoginGraceTime "
+    line: "LoginGraceTime 60"
+  notify: sshd reload
+
+- name: 5.2.14 Limit Access via SSH (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^AllowGroups "
+    line: "AllowGroups {{ ssh_allow_groups }}"
+  when: ssh_allow_groups is defined
+  notify: sshd reload
+
+- name: 5.2.14 Limit Access via SSH (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^AllowUsers "
+    line: "AllowUsers {{ ssh_allow_users }}"
+  when: ssh_allow_users is defined
+  notify: sshd reload
+
+- name: 5.2.14 Limit Access via SSH (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^DenyGroups "
+    line: "DenyGroups {{ ssh_deny_groups }}"
+  when: ssh_deny_groups is defined
+  notify: sshd reload
+
+- name: 5.2.14 Limit Access via SSH (Scored)
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^DenyUsers "
+    line: "DenyUsers {{ ssh_deny_users }}"
+  when: ssh_deny_users is defined
+  notify: sshd reload

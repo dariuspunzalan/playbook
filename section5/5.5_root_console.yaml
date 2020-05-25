@@ -1,0 +1,5 @@
+---
+- name: 5.5 - Ensure root login is restricted to system console (Not Scored)
+  template:
+      dest: /etc/securetty
+      src: 5.5_securetty.j2

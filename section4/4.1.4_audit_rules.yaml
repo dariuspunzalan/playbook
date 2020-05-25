@@ -1,0 +1,15 @@
+---
+# 4.1.4 - 4.1.18 Configure audit rules
+# audit rules requires system reboot
+- name: 4.1.4 - 4.1.18 Configure auditd Rules (Scored)
+  copy:
+    src: etc/audit/audit.rules
+    dest: /etc/audit/rules.d/audit.rules
+  notify: auditd reload
+
+- name: Security team requirement 30-stig rules
+  template:
+    src:  4.1.2_30-stig.rules.j2
+    dest: /etc/audit/rules.d/30-stig.rules
+    mode: 0744
+  notify: auditd reload

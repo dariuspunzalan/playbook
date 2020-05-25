@@ -1,0 +1,12 @@
+---
+- name: "3.2.4 Ensure to log suspicious packets"
+  sysctl:
+    name: "{{ item }}"
+    sysctl_set: yes
+    state: present
+    value: "1"
+    ignoreerrors: yes
+  with_items:
+    - net.ipv4.conf.all.log_martians
+    - net.ipv4.conf.default.log_martians
+  notify: net ipv4 route flush

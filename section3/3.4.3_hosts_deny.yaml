@@ -1,0 +1,6 @@
+---
+- name: 3.4.3 Ensure /etc/hosts.deny is configured
+  template:
+      dest: /etc/hosts.deny
+      src: 3.4.3_hosts.deny.j2
+      mode: '0644'

@@ -1,0 +1,10 @@
+---
+- name: 3.7 Ensure wireless interfaces are disabled (Not Scores)
+  shell: 'ip link show up'
+  ignore_errors: yes
+  register: w_3_7
+  when: w_3_7.stderr is defined
+
+- name: 3.7 Display result
+  debug: var=w_3_7.stdout_lines
+  when: w_3_7.stderr is defined

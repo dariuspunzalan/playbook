@@ -1,0 +1,23 @@
+---
+- name: 3.5.2 Check if sctp is in use
+  shell: "lsmod | grep sctp"
+  register: result_sctp
+  ignore_errors: yes
+
+# - name: debug
+#   debug:
+#     msg: '{{ result_sctp }}'
+
+- name: 3.5.2 Ensure sctp is disabled
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install sctp(\\s|$)"
+    line: "install sctp /bin/true"
+    create: yes
+  when: result_sctp.stdout_lines|length == 0
+
+- name: 3.5.2 Ensure sctp is disabled
+  modprobe:
+      name: sctp
+      state: absent
+  when: result_sctp.stdout_lines|length == 0

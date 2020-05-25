@@ -1,0 +1,11 @@
+---
+# 4.1.3 Ensure auditing for processes that start prior to auditd is enabled 
+# Applies to grub2
+- name: Add audit=1 in grub2 config
+  lineinfile:
+    state: present
+    dest: /etc/default/grub
+    backrefs: yes
+    regexp: '^(GRUB_CMDLINE_LINUX=(?!.*audit)\"[^\"]+)(\".*)'
+    line: '\1 audit=1\2'
+  notify: refresh grub2

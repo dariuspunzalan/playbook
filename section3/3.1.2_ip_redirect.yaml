@@ -1,0 +1,12 @@
+---
+- name: "3.1.2 Ensure IP Redirect is disabled"
+  sysctl:
+    name: "{{ item }}"
+    sysctl_set: yes
+    state: present
+    value: "0"
+    ignoreerrors: yes
+  with_items:
+    - net.ipv4.conf.all.send_redirects
+    - net.ipv4.conf.default.send_redirects
+  notify: net ipv4 route flush

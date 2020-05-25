@@ -1,0 +1,19 @@
+---
+- name: 3.5.3 Check if rds is in use
+  shell: "lsmod | grep rds"
+  register: result_rds
+  ignore_errors: yes
+
+- name: 3.5.3 Ensure rds is disabled
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install rds(\\s|$)"
+    line: "install rds /bin/true"
+    create: yes
+  when: result_rds.stdout_lines|length == 0
+
+- name: 3.5.3 Ensure rds is disabled
+  modprobe:
+      name: rds
+      state: absent
+  when: result_rds.stdout_lines|length == 0

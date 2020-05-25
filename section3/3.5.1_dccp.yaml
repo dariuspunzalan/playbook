@@ -1,0 +1,19 @@
+---
+- name: 3.5.1 Check if dccp is in use
+  shell: "lsmod | grep dccp"
+  register: result_dccp
+  ignore_errors: yes
+
+- name: 3.5.1 Ensure DCCP is disabled
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install dccp(\\s|$)"
+    line: "install dccp /bin/true"
+    create: yes
+  when: result_dccp.stdout_lines|length == 0
+
+- name: 3.5.1 Ensure DCCP is disabled
+  modprobe:
+      name: dccp
+      state: absent
+  when: result_dccp.stdout_lines|length == 0

@@ -1,0 +1,6 @@
+---
+- name: 3.4.2 Ensure /etc/hosts.allow is configured
+  template:
+      dest: /etc/hosts.allow
+      src: 3.4.2_hosts.allow.j2
+      mode: '0644'

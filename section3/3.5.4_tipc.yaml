@@ -1,0 +1,19 @@
+---
+- name: 3.5.4 Check if tipc is in use
+  shell: "lsmod | grep tipc"
+  register: result_tipc
+  ignore_errors: yes
+
+- name: 3.5.4 Ensure TIPC is disabled
+  modprobe:
+      name: tipc
+      state: absent
+  when: result_tipc.stdout_lines|length == 0
+
+- name: 3.5.4 Ensure TIPC is disabled
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install tipc(\\s|$)"
+    line: "install tipc /bin/true"
+    create: yes
+  when: result_tipc.stdout_lines|length == 0

@@ -1,0 +1,40 @@
+---
+- name: 6.2.1 Verify password fields are not empty (Scored)
+  shell: cat /etc/shadow | awk -F':' '($2 == "" ) { print $1 " does not have a password "}'
+  ignore_errors: yes
+  register: review_system_account
+  when: review_system_account.stderr is defined
+- debug: var=review_system_account.stdout_lines
+  when: review_system_account.stderr is defined
+
+- name: 6.2.2 Verify no legacy "+" entries exist in /etc/passwd (Scored)
+  shell: grep '^\+:' /etc/passwd
+  ignore_errors: yes
+  register: review_system_account
+  when: review_system_account.stderr is defined
+- debug: var=review_system_account.stdout_lines
+  when: review_system_account.stderr is defined
+
+- name: 6.2.3 Verify no legacy "+" entries exist in /etc/shadow (Scored) 
+  shell: grep '^\+:' /etc/shadow
+  ignore_errors: yes
+  register: review_system_account
+  when: review_system_account.stderr is defined
+- debug: var=review_system_account.stdout_lines
+  when: review_system_account.stderr is defined
+
+- name: 6.2.4 Verify no legacy "+" entries exist in /etc/group (Scored) 
+  shell: grep '^\+:' /etc/group
+  ignore_errors: yes
+  register: review_system_account
+  when: review_system_account.stderr is defined
+- debug: var=review_system_account.stdout_lines
+  when: review_system_account.stderr is defined
+
+- name: 6.2.5  Verify No UID 0 Accounts Exist Other Than root (Scored) 
+  shell: cat /etc/passwd | awk -F':' '($3 == 0) { print $1 }' | grep -qx 'root'
+  ignore_errors: yes
+  register: review_system_account
+  when: review_system_account.stderr is defined
+- debug: var=review_system_account.stdout_lines
+  when: review_system_account.stderr is defined

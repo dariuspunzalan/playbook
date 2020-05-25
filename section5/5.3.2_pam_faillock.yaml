@@ -1,0 +1,26 @@
+---
+# variables available for fine tuning:
+# pam_lockdeny and pam_unlocktime
+- name: 5.3.2 Ensure lockout for failed password attempts is configured Begin(Scored)
+  blockinfile:
+    path: '/etc/pam.d/{{ item }}'
+    marker: "# {mark} pam_faillock head"
+    insertafter: '^auth[\s]*required[\s]*pam_env.so[\s]*.*$'
+    block: |
+      auth        [success=ignore default=2] pam_localuser.so
+      auth        requisite     pam_faillock.so preauth audit deny={{ pam_lockdeny|default('5', true) }} unlock_time={{ pam_unlocktime|default('900', true) }}
+  loop:
+    - system-auth
+    - password-auth
+
+- name: 5.3.2 Ensure lockout for failed password attempts is configured End(Scored)
+  blockinfile:
+    path: '/etc/pam.d/{{ item }}'
+    marker: "# {mark} pam_faillock tail"
+    insertbefore: '^auth[\s]*required[\s]*pam_deny.so[\s]*.*$'
+    block: |
+      auth        [success=ignore default=1] pam_localuser.so
+      auth        [default=die] pam_faillock.so authfail audit deny={{ pam_lockdeny|default('5', true) }} unlock_time={{ pam_unlocktime|default('900', true) }}
+  loop:
+    - system-auth
+    - password-auth

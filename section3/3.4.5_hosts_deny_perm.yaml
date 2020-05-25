@@ -1,0 +1,6 @@
+---
+- name: 3.4.5 Ensure /etc/hosts.deny is configured
+  file:
+      path: /etc/hosts.deny
+      mode: '0644'
+

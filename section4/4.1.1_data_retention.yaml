@@ -1,0 +1,40 @@
+---
+- name: 4.1.1.1 - Ensure audit log storage size is configured 
+  lineinfile:
+    state: present
+    dest: /etc/audit/auditd.conf
+    line: "max_log_file = {{ max_log_file }}"
+    regex: '^max_log_file '
+  notify: auditd reload
+
+- name: 4.1.1.2 - Disable system when log is full - email
+  lineinfile:
+    state: present
+    dest: /etc/audit/auditd.conf
+    line: "space_left_action = {{ space_left_action }}"
+    regex: '^space_left_action '
+  notify: auditd reload
+
+- name: 4.1.1.2 - Disable system when log is full - mail_acct
+  lineinfile:
+    state: present
+    dest: /etc/audit/auditd.conf
+    line: "action_mail_acct = {{ action_mail_acct }}"
+    regex: '^action_mail_acct '
+  notify: auditd reload
+
+- name: 4.1.1.2 - Disable system when log is full - admin_space_left
+  lineinfile:
+    state: present
+    dest: /etc/audit/auditd.conf
+    line: "admin_space_left_action = {{ admin_space_left_action }}"
+    regex: '^admin_space_left_action '
+  notify: auditd reload
+
+- name: 4.1.1.3 - Log retention
+  lineinfile:
+    state: present
+    dest: /etc/audit/auditd.conf
+    line: "max_log_file_action = {{ max_log_file_action }}"
+    regex: '^max_log_file_action '
+  notify: auditd reload
