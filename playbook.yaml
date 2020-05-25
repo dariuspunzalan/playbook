@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    roles_included:
+    - hostname
+    - network_interface
+    - ca-trust
+    - local_accounts
+    - sudoers
+    - timezone
+    - sysctl
+    - ntp
+    - syslog_config
+    - nrpe_config
+    - iptables
+    - install_packages
+    - services
+    - limits_config
+    - make_localcert
+    - samba
+    - selinux
+  tasks:
+  - name: Import roles
+    include_role:
+      name: '{{ inputrolesvar }}'
+      apply:
+        tags: '{{ inputrolesvar }}'
+    with_items:
+    - '{{ roles_included }}'
+    loop_control:
+      loop_var: inputrolesvar
+    tags:
+    - always
